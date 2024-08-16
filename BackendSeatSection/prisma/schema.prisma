@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  city_id   Int       @id @default(autoincrement())
+  city_name String    
+  zip_code      Int
+  theaters      Theater[]
+}
+
+model Theater {
+  theater_id    Int       @id @default(autoincrement())
+  theater_name  String
+  total_screen  Int
+  theater_location String
+  city_id   Int
+  city      City  @relation(fields: [city_id], references: [city_id])
+  screens       Screen[]
+}
+
+model Screen {
+  screen_id     Int       @id @default(autoincrement())
+  screen_name   String
+  theater_id    Int
+  total_seats   Int 
+  theater       Theater   @relation(fields: [theater_id], references: [theater_id])
+  tiers         Tier[]
+  show_timings  ScreenShowTiming[]
+}
+
+model Tier {
+  tier_id         Int       @id @default(autoincrement())
+  tier_name       String
+  price           Float
+  screen_id       Int
+  screen          Screen    @relation(fields: [screen_id], references: [screen_id])
+  seat_start_range String
+  seat_end_range   String
+}
+
+model ScreenShowTiming {
+  screen_show_id  Int       @id @default(autoincrement())
+  screen_id       Int
+  screen          Screen    @relation(fields: [screen_id], references: [screen_id])
+  start_time      Int
+  end_time        Int
+  movie_id        Int
+  movie           Movie     @relation(fields: [movie_id], references: [movie_id])
+}
+
+model Movie {
+  movie_id        Int       @id @default(autoincrement())
+  movie_name      String
+  show_timings    ScreenShowTiming[]
+}
+
