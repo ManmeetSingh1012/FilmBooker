@@ -6,7 +6,7 @@ interface userdata extends Document {
   username: string;
   email: string;
   password: string;
-  verificationCode: string | null;
+  verificationCode: number | null;
   isVerified: boolean;
   token: string;
   genratetoken: () => string;
@@ -34,7 +34,7 @@ const userschema = new mongoose.Schema<userdata>(
 
     password: { type: String, required: true },
 
-    verificationCode: { type: String , required: false },
+    verificationCode: { type: Number, required: false },
 
     isVerified: { type: Boolean, default: false },
 

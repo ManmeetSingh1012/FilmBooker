@@ -73,9 +73,14 @@ const signup = async (req: Request, res: Response) => {
       producer(data);
       //send_mail(code);
 
-      const signedInUser = await User.findById(new_user._id).select("-password")
+      const signedInUser = await User.findById(new_user._id).select([
+        "-password",
+        "-verificationCode",
+      ]);
 
-      return res.status(201).json({ message: "User created", user: signedInUser });
+      return res
+        .status(201)
+        .json({ message: "User created", user: signedInUser });
     } else {
       return res.status(400).json({ message: "User not created" });
     }

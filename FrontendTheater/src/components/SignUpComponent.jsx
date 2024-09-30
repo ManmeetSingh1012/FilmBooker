@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { signin } from "../Redux/authslice";
 
-export default function LoginComponent() {
+export default function SignUpComponent() {
   const navigate = useNavigate();
   const {
     register,
@@ -20,18 +20,18 @@ export default function LoginComponent() {
     console.log(formData);
     setIsLoading(true); // Start the loader
 
-    const url = `${import.meta.env.VITE_LOCAL_LINK}/login`;
+    const url = `${import.meta.env.VITE_LOCAL_LINK}/signup`;
     try {
       axios
         .post(url, formData)
         .then((response) => {
           console.log(response.data.user);
           dispatch(signin(response.data.user));
-          navigate("/dashboard");
+          navigate("/verify");
         })
         .catch((error) => {
           console.log(error);
-          seterror(error.message);
+          seterror(error.response.data.message);
         })
         .finally(() => {
           setIsLoading(false); // Stop the loader
@@ -81,6 +81,29 @@ export default function LoginComponent() {
                 <p className="text-red-500 text-sm">
                   {errors.username.message}
                 </p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Email address
+            </label>
+            <div className="mt-2">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                {...register("email", { required: "Email is required" })}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
           </div>
@@ -140,7 +163,7 @@ export default function LoginComponent() {
                   ></path>
                 </svg>
               ) : null}
-              {isLoading ? "Loging in..." : "Login in"}
+              {isLoading ? "Signing in..." : "Sign in"}
             </button>
           </div>
         </form>

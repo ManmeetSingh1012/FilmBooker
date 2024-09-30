@@ -1,8 +1,0 @@
-npm init 
-
-change dis 
-
-install dependency 
-npx prisma db push : fast sync of prisma schema with database
-vs 
-npx prisma migrate dev : sync of prisma schema with database with managing the history

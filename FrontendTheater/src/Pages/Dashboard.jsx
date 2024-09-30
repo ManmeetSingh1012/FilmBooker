@@ -8,12 +8,27 @@ import AddTheaterComponent from "../components/addtheatercomponent";
 export default function Dashboard() {
   const [showUserDialog, setShowUserDialog] = useState(false);
   const email = useSelector((state) => state.user.email);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(signout());
     navigate("/login");
+  };
+
+  const getlocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
+
+  const showPosition = (position) => {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    console.log("Latitude: " + lat + "Longitude: " + lon);
   };
 
   return (
@@ -91,6 +106,8 @@ export default function Dashboard() {
           </h1>
         </div>
       </div>
+
+      <button onClick={getlocation}>hello</button>
 
       <div>
         <AddCityComponent />

@@ -8,7 +8,7 @@ export default function Landing() {
   const navigate = useNavigate();
 
   const navigateTo = () => {
-    token ? navigate("/dashboard") : navigate("/login");
+    token ? navigate("/dashboard") : navigate("/signup");
   };
   return (
     <div className="flex flex-wrap flex-col justify-center items-center mt-10">

@@ -25,6 +25,7 @@ export default function VerifyComponent() {
 
   function onSubmit(formData) {
     formData.email = email;
+    formData.code = Number(formData.code);
     console.log(formData);
 
     const url = `${import.meta.env.VITE_LOCAL_LINK}/verify`;
@@ -39,10 +40,12 @@ export default function VerifyComponent() {
         })
         .catch((error) => {
           console.log(error);
-          seterror(error.response.data.msg);
+          seterror(error.response.data.message);
         });
     } catch (error) {
       console.log(error.message);
+      seterror(error.message);
+
       return error;
     }
   }

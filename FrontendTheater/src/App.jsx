@@ -11,6 +11,7 @@ function App() {
   const Login = lazy(() => import("./Pages/Login.jsx"));
   const Dashboard = lazy(() => import("./Pages/Dashboard.jsx"));
   const Verify = lazy(() => import("./Pages/Verify.jsx"));
+  const Signup = lazy(() => import("./Pages/Signup.jsx"));
   return (
     <BrowserRouter>
       <Suspense>
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify" element={<Verify />} />
+          <Route path="/signup" element={<Signup />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
