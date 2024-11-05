@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronRight, ChevronLeft, ThumbsUp, Star, Info } from "lucide-react";
 import movieData from "./movieData";
+
 const MovieCard = ({ movie }) => {
   const [showDescription, setShowDescription] = useState(false);
   const descriptionRef = useRef(null);
@@ -15,12 +16,8 @@ const MovieCard = ({ movie }) => {
   };
 
   useEffect(() => {
-    // Add event listener for clicks outside of the description
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Cleanup the event listener on component unmount
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -69,7 +66,6 @@ const MovieCard = ({ movie }) => {
 };
 
 export default function RecommendedMovies({ movies }) {
-  console.log(movies);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const containerRef = useRef(null);
@@ -77,34 +73,21 @@ export default function RecommendedMovies({ movies }) {
   const handleScroll = (direction) => {
     const container = containerRef.current;
     const scrollAmount = 300;
-
-    if (direction === "right") {
-      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    } else {
-      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    }
+    container.scrollBy({ left: direction === "right" ? scrollAmount : -scrollAmount, behavior: "smooth" });
   };
 
   const updateArrows = () => {
     const container = containerRef.current;
-    const isAtStart = container.scrollLeft === 0;
-    const isAtEnd =
-      container.scrollLeft + container.clientWidth >= container.scrollWidth;
-
-    setShowLeftArrow(!isAtStart);
-    setShowRightArrow(!isAtEnd);
+    setShowLeftArrow(container.scrollLeft > 0);
+    setShowRightArrow(container.scrollLeft + container.clientWidth < container.scrollWidth);
   };
 
   useEffect(() => {
-    const container = containerRef.current;
-    container.addEventListener("scroll", updateArrows);
-    updateArrows(); // Initial check for arrow visibility
-
-    return () => container.removeEventListener("scroll", updateArrows);
-  }, []);
+    updateArrows(); // Check arrows on initial load
+  }, [movies]); // Re-run if movies data changes
 
   return (
-    <div className="p-1 bg-gray-100 ">
+    <div className="p-1 bg-gray-100">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-lg font-semibold font-montserrat mb-6">
           Recommended Movies
@@ -121,7 +104,8 @@ export default function RecommendedMovies({ movies }) {
           )}
           <div
             ref={containerRef}
-            className="flex space-x-20 px-10 overflow-x-auto no-scrollbar pb-2"
+            onScroll={updateArrows}
+            className="flex space-x-5 px-10 overflow-x-auto no-scrollbar pb-2"
             style={{ scrollBehavior: "smooth" }}
           >
             {movies?.length ? (

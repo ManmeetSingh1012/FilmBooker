@@ -1,12 +1,12 @@
-import { movieSchema } from "../validators/movie-validators";
+import {  premiumMovieSchema } from "../validators/movie-validators";
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from 'zod';
-const validate =  async (req:Request, res:Response, next:NextFunction) => {
+const premium_validate =  async (req:Request, res:Response, next:NextFunction) => {
 
 
    try{
          console.log(req.body);
-         const moviedata = await movieSchema.parseAsync(req.body);
+         const moviedata = await  premiumMovieSchema.parseAsync(req.body);
          req.body = moviedata;
          next();
    }catch (error) {
@@ -27,5 +27,4 @@ const validate =  async (req:Request, res:Response, next:NextFunction) => {
 
 }
 
-export default validate;
-
+export default premium_validate;

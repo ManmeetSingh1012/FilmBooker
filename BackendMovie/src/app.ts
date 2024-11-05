@@ -24,8 +24,10 @@ app.use(cookieParser());
 
 
 import movie_router from "./routes/movie.routes";
+import premium_movie_router from "./routes/premium_movies.routes";
 
 app.use("/api/v1/movie",movie_router);
+app.use("/api/v1/premium_movie",premium_movie_router);
 
 //with req ,res in api we have next and err , next is flag for middleware : used jwt 
 app.get('/', (_: Request, res: Response) => {
