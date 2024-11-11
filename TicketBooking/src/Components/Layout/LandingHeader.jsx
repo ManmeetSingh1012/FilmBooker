@@ -1,9 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import { Search, Menu } from "lucide-react";
+import LoginModal from "./loginModal";
 
 export default function LandingHeader() {
+
+  const [location, setLocation] = useState("Your Location")
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }
+  
+  
+  function showPosition(position) {
+
+    getCityFromCoords(position.coords.latitude, position.coords.longitude)
+    .then(location => {
+      console.log("location",location)
+
+      if(location.city){
+        setLocation(location.city)}
+    });
+   // console.log(position.coords.latitude, position.coords.longitude);
+  }
+
+  async function getCityFromCoords(lat, lon) {
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+        );
+        const data = await response.json();
+        console.log(data);
+        return {
+            city: data.address.state_district
+            ,
+            country: data.address.country,
+            state: data.address.state
+        };
+    } catch (error) {
+        console.error("Error fetching location:", error);
+        throw error;
+    }
+}
+
+
   return (
     <nav className="flex items-center justify-between px-3 py-1.5 bg-white shadow-2xl">
+
+      {/* Login Modal */}
+      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
       {/* Logo */}
       <div className="flex items-center">
         <div className="text-base font-montserrat text-gray-800">
@@ -27,7 +76,7 @@ export default function LandingHeader() {
       {/* Right Section */}
       <div className="flex items-center space-x-3">
         <div className="flex items-center space-x-0.5 text-gray-700 text-sm">
-          <span>Ludhiana</span>
+          <button onClick={getLocation}>{location}</button>
           <svg
             className="w-3.5 h-3.5"
             fill="none"
@@ -43,7 +92,7 @@ export default function LandingHeader() {
           </svg>
         </div>
 
-        <button className="px-4 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600">
+        <button onClick={()=> setShowLoginModal(true)} className="px-4 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600">
           Sign in
         </button>
 

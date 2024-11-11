@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 const premiummovieSchema = new Schema({
   mainposter: { type: String, required: true },
   backposter: { type: String, required: true },
-  movielink : { type: String, required: true },
+
   title: { type: String, required: true, index: true },
   aboutmovie: { type: String, required: true },
   language: { type: [String], required: true },

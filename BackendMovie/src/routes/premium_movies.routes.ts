@@ -1,13 +1,14 @@
 import { Router } from "express";
 import premiumController from "../controller/premium_movie.controller";
-import validate from "../middleware/movie.middleware";
+
+import premium_validate from "../middleware/premium_movie.middleware";
 
 const premiumMovieRouter = Router();
 
 // Define the base route for premium movies
 premiumMovieRouter.route("/premium_movies")
   .get(premiumController.getpremium) // GET all premium movies
-  .post(validate, premiumController.addpremium); // POST new premium movie with validation
+  .post(premium_validate, premiumController.addpremium); // POST new premium movie with validation
 
 // Define routes with parameters for specific movie actions
 premiumMovieRouter.route("/premium_movies/:id")

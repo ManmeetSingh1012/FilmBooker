@@ -2,9 +2,10 @@ import LandingHeader from "../../Components/Layout/LandingHeader";
 import React, { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import RecommendedMovies from "../../Components/Layout/RecomendedMovies";
-import PremiereMovies from "../../Components/Layout/PremiereMovies";
+import PremiereMovies from "../../Components/Layout/PremiumMovies";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 import useMovieHooks from "../../hooks/useMovieHooks";
+import PremiumMovies from "../../Components/Layout/PremiumMovies";
 
 const styles = `
   .no-scrollbar::-webkit-scrollbar {
@@ -17,15 +18,20 @@ const styles = `
   }
 `;
 
+
+
+
+
 export default function Landing() {
-  const { movies, getMovies } = useMovieHooks();
+  const { movies, getMovies , premiumMovies, getpremiumMovies } = useMovieHooks();
   useEffect(() => {
     getMovies();
+    getpremiumMovies();
   }, []);
 
   console.log(movies);
 
-  const [movie, setMovies] = useState([]);
+ 
 
   const socialLinks = [
     { name: "Facebook", icon: Facebook, href: "#" },
@@ -184,7 +190,7 @@ export default function Landing() {
       <style>{styles}</style>
       <RecommendedMovies movies={movies} />
 
-      <PremiereMovies />
+      <PremiumMovies movies={premiumMovies} />
 
       <footer className="w-full bg-gray-800 text-gray-400">
         {/* Logo Section */}

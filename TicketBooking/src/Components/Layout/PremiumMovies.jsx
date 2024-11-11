@@ -18,14 +18,14 @@ const PremiereLogo = () => (
 );
 
 const PremiereCard = ({ movie }) => (
-  <div className="relative flex-shrink-0 w-64 group">
+  <div className="relative flex-shrink-0 w-52 group">
     <div className="relative rounded-lg overflow-hidden">
       <img
-        src={movie.imageUrl}
+        src={movie.mainposter}
         alt={movie.title}
         className="w-full h-[380px] object-cover transition-transform duration-300 group-hover:scale-105"
       />
-      <div className="absolute top-3 left-3 bg-red-500 text-white text-sm px-3 py-1 rounded font-medium">
+      <div className="absolute top-0 left-0 bg-red-500 text-white text-sm px-3 py-1 rounded font-medium">
         PREMIERE
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent pt-12 pb-4 px-3">
@@ -36,49 +36,12 @@ const PremiereCard = ({ movie }) => (
   </div>
 );
 
-const PremiereMovies = () => {
+const PremiumMovies = ({movies}) => {
   const scrollRef = useRef(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
 
-  const movies = [
-    {
-      id: 1,
-      title: "Yolo",
-      language: "Mandarin",
-      imageUrl: "/api/placeholder/256/380",
-    },
-    {
-      id: 2,
-      title: "The Defenders",
-      language: "English",
-      imageUrl: "/api/placeholder/256/380",
-    },
-    {
-      id: 3,
-      title: "Speak No Evil",
-      language: "English",
-      imageUrl: "/api/placeholder/256/380",
-    },
-    {
-      id: 4,
-      title: "Strange Darling",
-      language: "English",
-      imageUrl: "/api/placeholder/256/380",
-    },
-    {
-      id: 5,
-      title: "The Line (2023)",
-      language: "English",
-      imageUrl: "/api/placeholder/256/380",
-    },
-    {
-      id: 6,
-      title: "Movie 6",
-      language: "English",
-      imageUrl: "/api/placeholder/256/380",
-    },
-  ];
+ 
 
   const scroll = (direction) => {
     const container = scrollRef.current;
@@ -140,9 +103,11 @@ const PremiereMovies = () => {
             onScroll={handleScroll}
             className="flex gap-6 overflow-x-auto no-scrollbar pb-4"
           >
-            {movies.map((movie) => (
-              <PremiereCard key={movie.id} movie={movie} />
-            ))}
+            {movies?.length ? (
+              movies.map((movie) => <PremiereCard key={movie.id} movie={movie} />)
+            ) : (
+              <div className="p-6 text-center">No movies available</div>
+            )}
           </div>
 
           {showRightButton && (
@@ -159,4 +124,4 @@ const PremiereMovies = () => {
   );
 };
 
-export default PremiereMovies;
+export default PremiumMovies;
