@@ -1,7 +1,51 @@
-import React from 'react';
+
 import { X } from 'lucide-react';
+import {GoogleLogin} from '@react-oauth/google'
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import useProfile from '../../store/usProfile';
 
 export default function LoginModal({ onClose }) {
+
+
+  const [ user, setUser ] = useState([]);
+  //const [ profile, setProfile ] = useState(null);
+  const setProfile = useProfile((state) => state.setProfile);
+  
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log('Login Failed:', error)
+});
+
+useEffect(
+  () => {
+      if (user) {
+          axios
+              .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                  headers: {
+                      Authorization: `Bearer ${user.access_token}`,
+                      Accept: 'application/json'
+                  }
+              })
+              .then((res) => {
+                  console.log(res.data);
+                  const data = {
+                      email: res.data.email,
+                      name: res.data.name,
+                      picture: res.data.picture
+                  }
+                  setProfile(data);
+                  onClose()
+              })
+              .catch((err) => console.log(err));
+      }
+  },
+  [ user ]
+);
+
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center py-5 bg-black/50 overflow-y-auto">
       <div className="relative w-full max-w-md p-4 md:h-auto">
@@ -24,9 +68,9 @@ export default function LoginModal({ onClose }) {
             </div>
 
             <div className="mt-7 flex flex-col gap-2">
-              
 
-              <button className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+              
+            <button   onClick={()=>login()} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
                 <img
                   src="https://www.svgrepo.com/show/475656/google-color.svg"
                   alt=""
@@ -35,7 +79,8 @@ export default function LoginModal({ onClose }) {
                 Continue with Google
               </button>
 
-             
+              
+
             </div>
 
             <div className="flex w-full items-center gap-2 py-6 text-sm text-slate-600">

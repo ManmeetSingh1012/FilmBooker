@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { Search, Menu } from "lucide-react";
 import LoginModal from "./loginModal";
+import useProfile from "../../store/usProfile";
+import { User} from 'lucide-react';
 
 export default function LandingHeader() {
 
   const [location, setLocation] = useState("Your Location")
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const getProfile = useProfile((state) => state.getProfile);
+  const profileData = getProfile();
+
+  console.log(profileData);
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -92,9 +99,34 @@ export default function LandingHeader() {
           </svg>
         </div>
 
-        <button onClick={()=> setShowLoginModal(true)} className="px-4 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600">
+
+{
+
+  profileData ? (<>
+   <div className="inline-flex items-center gap-3 px-4 py-1   cursor-pointer">
+      {/* Avatar Circle */}
+      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
+        <User className="w-5 h-5 text-gray-400" />
+      </div>
+      
+      {/* Greeting Text */}
+      <div className="flex flex-col">
+        <span className="text-sm text-gray-500">Hi,</span>
+        <span className="text-sm font-medium font-montserrat text-gray-700">{profileData.name}...</span>
+      </div>
+
+    
+    </div>
+  
+  </>) :(<>
+  
+  <button onClick={()=> setShowLoginModal(true)} className="px-4 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600">
           Sign in
         </button>
+        
+         </>)
+}
+        
 
         <button className="p-1">
           <Menu className="h-5 w-5 text-gray-700" />
